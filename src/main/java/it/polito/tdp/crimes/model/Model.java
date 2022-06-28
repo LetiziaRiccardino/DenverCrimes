@@ -29,6 +29,7 @@ public class Model {
 	public List<Adiacenza> creaGrafo(int mese, String categoria) {
 		this.grafo= new SimpleWeightedGraph<String, DefaultWeightedEdge>(DefaultWeightedEdge.class);
 		List<String> vertici= dao.getVertici(mese, categoria);
+		System.out.println("listaVertici "+vertici.size()+"\n");
 		Graphs.addAllVertices(this.grafo, vertici);
 		adiacenze= dao.getArchi(mese, categoria);
 		for(Adiacenza a: adiacenze) {

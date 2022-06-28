@@ -113,8 +113,8 @@ public class EventsDao {
 		
 	}
 	
-	public List<String> getVertici(Integer mese, String categoria){
-		String sql="SELECT DISTINCT offense_type_id as crimine"
+	public List<String> getVertici(int mese, String categoria){
+		String sql="SELECT DISTINCT offense_type_id "
 				+ "FROM events "
 				+ "WHERE offense_category_id=? AND MONTH(reported_date)=? ";
 		List<String> list = new ArrayList<>() ;
@@ -129,7 +129,7 @@ public class EventsDao {
 			ResultSet res = st.executeQuery() ;
 			
 			while(res.next()) {
-				list.add(res.getString("crimine") );
+				list.add(res.getString("offense_type_id") );
 				
 			}
 			
@@ -145,9 +145,9 @@ public class EventsDao {
 	}
 	
 	public List<Adiacenza> getArchi(int mese, String categoria){
-		String sql= "SELECT e1.offense_type_id as a1, e2.offense_type_id as a2, COUNT(DISTINCT e1.neighborhood_id) AS peso "
-				+ "FROM events e1,  events e2 "
-				+ "WHERE e1.offense_type_id>e2.offense_type_id AND e1.offense_category_id=?  AND e1.offense_category_id=e2.offense_category_id"
+		String sql= "SELECT e1.offense_type_id AS a1, e2.offense_type_id AS a2, (COUNT(DISTINCT e1.neighborhood_id)) AS peso "
+				+ "FROM events e1,  events e2  "
+				+ "WHERE e1.offense_type_id > e2.offense_type_id AND e1.offense_category_id=?  AND e1.offense_category_id=e2.offense_category_id "
 				+ "AND MONTH(e1.reported_date)=MONTH(e2.reported_date) AND MONTH(e1.reported_date)=? "
 				+ "AND e1.neighborhood_id= e2.neighborhood_id "
 				+ "GROUP BY e1.offense_type_id, e2.offense_type_id";
@@ -156,8 +156,9 @@ public class EventsDao {
 			Connection conn = DBConnect.getConnection() ;
 
 			PreparedStatement st = conn.prepareStatement(sql) ;
-			st.setInt(2, mese);
 			st.setString(1, categoria);
+			st.setInt(2, mese);
+			
 			
 			ResultSet res = st.executeQuery() ;
 			
